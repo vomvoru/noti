@@ -2,36 +2,13 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ZopfliPlugin = require('zopfli-webpack-plugin');
-const BrotliPlugin = require('brotli-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
 const htmlTemplate = require('html-webpack-template');
 
 module.exports = {
-  mode: 'development',
   entry: './src/index.tsx',
-  devtool: 'inline-source-map',
-  devServer: {
-    contentBase: './dist',
-  },
   plugins: [
     new CleanWebpackPlugin(),
-    new ZopfliPlugin({
-      asset: '[path].gz[query]',
-      algorithm: 'zopfli',
-      test: /\.(js|html)$/,
-      threshold: 10240,
-      minRatio: 0.8,
-    }),
-    new BrotliPlugin({
-      asset: '[path].br[query]',
-      test: /\.(js|css|html|svg)$/,
-      threshold: 10240,
-      minRatio: 0.8,
-    }),
-    new webpack.DefinePlugin({
-      PRODUCTION: JSON.stringify(false),
-    }),
+    new webpack.EnvironmentPlugin(['NODE_ENV', 'DEBUG']),
     new HtmlWebpackPlugin({
       template: htmlTemplate,
       inject: false,
@@ -82,12 +59,5 @@ module.exports = {
         },
       },
     },
-    minimizer: [
-      new TerserPlugin({
-        cache: true,
-        parallel: true,
-        sourceMap: true,
-      }),
-    ],
   },
 };
