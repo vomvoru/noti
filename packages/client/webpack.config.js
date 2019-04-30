@@ -2,8 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-
-// const scriptFileRegex = /(\.js|\.ts|\.jsx|\.tsx)$/;
+const ZopfliPlugin = require('zopfli-webpack-plugin');
+const BrotliPlugin = require('brotli-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const htmlTemplate = require('html-webpack-template');
 
 module.exports = {
   mode: 'development',
@@ -14,8 +16,27 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new ZopfliPlugin({
+      asset: '[path].gz[query]',
+      algorithm: 'zopfli',
+      test: /\.(js|html)$/,
+      threshold: 10240,
+      minRatio: 0.8,
+    }),
+    new BrotliPlugin({
+      asset: '[path].br[query]',
+      test: /\.(js|css|html|svg)$/,
+      threshold: 10240,
+      minRatio: 0.8,
+    }),
+    new webpack.DefinePlugin({
+      PRODUCTION: JSON.stringify(false),
+    }),
     new HtmlWebpackPlugin({
+      template: htmlTemplate,
+      inject: false,
       title: 'Output Management',
+      bodyHtmlSnippet: '<div id="root"></div>',
     }),
     new webpack.HashedModuleIdsPlugin(),
   ],
@@ -33,11 +54,6 @@ module.exports = {
           cacheDirectory: true,
         },
       },
-      // {
-      //   test: /(\.js|\.ts|\.jsx|\.tsx)$/,
-      //   loader: 'source-map-loader',
-      //   enforce: 'pre',
-      // },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
@@ -56,15 +72,22 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.json'],
   },
   optimization: {
-    // runtimeChunk: 'single',
-    // splitChunks: {
-    //   cacheGroups: {
-    //     vendor: {
-    //       test: /[\\/]node_modules[\\/]/,
-    //       name: 'vendors',
-    //       chunks: 'all',
-    //     },
-    //   },
-    // },
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+        },
+      },
+    },
+    minimizer: [
+      new TerserPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true,
+      }),
+    ],
   },
 };

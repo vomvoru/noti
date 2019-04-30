@@ -34,13 +34,15 @@ const arr: number[] = [11, 22];
 console.log(arr[Symbol.iterator]());
 
 class Person {
+  public abc = 1;
+
   public aa() {
-    return 123;
+    return this.abc;
   }
 }
 
 console.log(new Person().aa());
 
-ReactDOM.render(<Hello text="world" />, document.body);
+ReactDOM.render(<Hello text="world" />, document.getElementById('root'));
 
 throw new Error('??');
