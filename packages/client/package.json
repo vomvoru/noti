@@ -5,26 +5,21 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.config.dev.js",
-    "build": "webpack --config webpack.config.prod.js"
+    "build": "webpack --config webpack.config.prod.js",
+    "build:dev": "webpack --config webpack.config.dev.js",
+    "babel": "babel --root-mode upward src --out-dir dist --extensions .js,.jsx,.ts,.tsx"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/react": "^16.8.15",
     "@types/react-dom": "^16.8.4",
-    "core-js": "^3.0.1",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "@babel/runtime-corejs3": "^7.4.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.4",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/plugin-transform-runtime": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.3.3",
-    "@babel/runtime-corejs3": "^7.4.4",
     "babel-loader": "^8.0.5",
     "brotli-webpack-plugin": "^1.1.0",
     "clean-webpack-plugin": "^2.0.1",

@@ -8,7 +8,6 @@ module.exports = {
   entry: './src/index.tsx',
   plugins: [
     new CleanWebpackPlugin(),
-    new webpack.EnvironmentPlugin(['NODE_ENV', 'DEBUG']),
     new HtmlWebpackPlugin({
       template: htmlTemplate,
       inject: false,
@@ -28,6 +27,7 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
         options: {
+          rootMode: 'upward',
           cacheDirectory: true,
         },
       },
